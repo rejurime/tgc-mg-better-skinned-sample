@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 
-namespace AnimationDataTypes
+namespace BetterSkinnedSample.AnimationDataTypes
 {
     public class AnimationClipReader : ContentTypeReader<AnimationClip>
     {

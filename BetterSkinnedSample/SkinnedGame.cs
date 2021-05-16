@@ -1,4 +1,4 @@
-using AnimationPipelineExtension;
+using BetterSkinnedSample.AnimationPipelineExtension;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -137,9 +137,9 @@ namespace BetterSkinnedSample
         //private string animationFilename = "ninja - running";
         //private string animationFilename = "ninja - silly dancing";
         //private string animationFilename = "ninja - walking";
-        //private string animationFilename = "xbot - front twist flip";
+        private readonly string animationFilename = "xbot - front twist flip";
         //private string animationFilename = "ybot - front flip";
-        private readonly string animationFilename = "ybot - kneeling pointing";
+        //private readonly string animationFilename = "ybot - kneeling pointing";
 
         #endregion
     }

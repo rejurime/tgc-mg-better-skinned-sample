@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace AnimationDataTypes
+namespace BetterSkinnedSample.AnimationDataTypes
 {
     /// <summary>
     ///     An animation clip is a set of keyframes with associated bones.

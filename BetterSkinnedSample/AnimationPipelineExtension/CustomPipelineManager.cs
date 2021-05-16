@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using MonoGame.Framework.Content.Pipeline.Builder;
 
-namespace AnimationPipelineExtension
+namespace BetterSkinnedSample.AnimationPipelineExtension
 {
     public class CustomPipelineManager : PipelineManager
     {

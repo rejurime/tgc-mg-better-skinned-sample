@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using AnimationDataTypes;
+using BetterSkinnedSample.AnimationDataTypes;
 using Microsoft.Xna.Framework;
 
 namespace BetterSkinnedSample

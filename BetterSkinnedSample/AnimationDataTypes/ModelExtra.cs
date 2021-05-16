@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AnimationDataTypes
+namespace BetterSkinnedSample.AnimationDataTypes
 {
     /// <summary>
     ///     Class that contains additional information attached to the model and shared with the runtime.

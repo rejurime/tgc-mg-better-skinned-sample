@@ -1,8 +1,8 @@
-﻿using AnimationDataTypes;
+﻿using BetterSkinnedSample.AnimationDataTypes;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 
-namespace AnimationPipelineExtension
+namespace BetterSkinnedSample.AnimationPipelineExtension
 {
     [ContentTypeWriter]
     public class ModelExtraWriter : ContentTypeWriter<ModelExtra>

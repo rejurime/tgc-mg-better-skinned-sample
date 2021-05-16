@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 
-namespace AnimationDataTypes
+namespace BetterSkinnedSample.AnimationDataTypes
 {
     public class ModelExtraReader : ContentTypeReader<ModelExtra>
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using AnimationDataTypes;
+using BetterSkinnedSample.AnimationDataTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-namespace AnimationPipelineExtension
+namespace BetterSkinnedSample.AnimationPipelineExtension
 {
     /// <summary>
     ///     This class extends the standard ModelProcessor to include code that extracts a skeleton, pulls any animations, and
