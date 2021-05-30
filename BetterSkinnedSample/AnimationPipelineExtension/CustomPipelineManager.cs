@@ -8,6 +8,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
 {
     public class CustomPipelineManager : PipelineManager
     {
+        // TODO. This class needs a refactor.
         private const string ContentFolder = "Content/";
         private const string BinFolder = "bin/";
         private const string ObjFolder = "obj/";

@@ -7,40 +7,14 @@ namespace BetterSkinnedSample.AnimationDataTypes
     /// </summary>
     public class ModelExtra
     {
-        #region Fields
-
-        /// <summary>
-        ///     The bone indices for the skeleton associated with any skinned model.
-        /// </summary>
-        private List<int> skeleton = new List<int>();
-
-        /// <summary>
-        ///     Any associated animation clips
-        /// </summary>
-        public List<AnimationClip> clips = new List<AnimationClip>();
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///     The bone indices for the skeleton associated with any skinned model.
-        /// </summary>
-        public List<int> Skeleton
-        {
-            get => skeleton;
-            set => skeleton = value;
-        }
-
         /// <summary>
         ///     Animation clips associated with this model.
         /// </summary>
-        public List<AnimationClip> Clips
-        {
-            get => clips;
-            set => clips = value;
-        }
+        public List<AnimationClip> Clips { get; set; } = new List<AnimationClip>();
 
-        #endregion
+        /// <summary>
+        ///     The bone indices for the skeleton associated with any skinned model.
+        /// </summary>
+        public List<int> Skeleton { get; set; } = new List<int>();
     }
 }

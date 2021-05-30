@@ -9,74 +9,37 @@ namespace BetterSkinnedSample
     /// </summary>
     public class Camera
     {
-        #region Update
-
-        public void Update(GraphicsDevice graphics, GameTime gameTime)
-        {
-            var gamePadState = GamePad.GetState(PlayerIndex.One);
-            if (PadPitchYaw)
-            {
-                Yaw(-gamePadState.ThumbSticks.Right.X * 0.05f);
-                Pitch(gamePadState.ThumbSticks.Right.Y * 0.05f);
-            }
-
-            var mouseState = Mouse.GetState();
-            if (graphics.Viewport.Bounds.Contains(mouseState.X, mouseState.Y))
-            {
-                if (MousePitchYaw && mouseState.LeftButton == ButtonState.Pressed &&
-                    lastMouseState.LeftButton == ButtonState.Pressed)
-                {
-                    float changeY = mouseState.Y - lastMouseState.Y;
-                    Pitch(-changeY * 0.005f);
-
-                    float changeX = mouseState.X - lastMouseState.X;
-                    Yaw(changeX * 0.005f);
-                }
-
-                if (MousePanTilt && mouseState.RightButton == ButtonState.Pressed &&
-                    lastMouseState.RightButton == ButtonState.Pressed)
-                {
-                    float changeY = mouseState.Y - lastMouseState.Y;
-                    Tilt(changeY * 0.0025f);
-
-                    float changeX = mouseState.X - lastMouseState.X;
-                    Pan(changeX * 0.0025f);
-                }
-
-                lastMouseState = mouseState;
-            }
-        }
-
-        #endregion
-
-        #region Fields
+        private readonly float fov = MathHelper.ToRadians(35);
 
         private readonly GraphicsDeviceManager graphics;
+
+        /// <summary>
+        ///     The up direction.
+        /// </summary>
+        private readonly Vector3 up = Vector3.Up;
+
+        /// <summary>
+        ///     The location we are looking at in space.
+        /// </summary>
+        private Vector3 center = Vector3.Zero;
 
         /// <summary>
         ///     The eye position in space.
         /// </summary>
         private Vector3 eye = new Vector3(250, 200, 350);
 
-        /// <summary>
-        ///     The location we are looking at in space.
-        /// </summary>
-        private Vector3 center = new Vector3(0, 0, 0);
-
-        /// <summary>
-        ///     The up direction.
-        /// </summary>
-        private readonly Vector3 up = new Vector3(0, 1, 0);
-
-        private readonly float fov = MathHelper.ToRadians(35);
-        private float znear = 10;
-        private float zfar = 10000;
-
         private MouseState lastMouseState;
+        private float zfar = 10000;
+        private float znear = 10;
 
-        #endregion
-
-        #region Properties
+        /// <summary>
+        ///     Constructor. Initializes the graphics field from a passed parameter.
+        /// </summary>
+        /// <param name="graphics">The graphics device manager for our program</param>
+        public Camera(GraphicsDeviceManager graphics)
+        {
+            this.graphics = graphics;
+        }
 
         /// <summary>
         ///     The computed view matrix.
@@ -134,17 +97,40 @@ namespace BetterSkinnedSample
 
         public bool PadPitchYaw { get; set; } = true;
 
-        #endregion
-
-        #region Construction and Initialization
-
-        /// <summary>
-        ///     Constructor. Initializes the graphics field from a passed parameter.
-        /// </summary>
-        /// <param name="graphics">The graphics device manager for our program</param>
-        public Camera(GraphicsDeviceManager graphics)
+        public void Update(GraphicsDevice graphics, GameTime gameTime)
         {
-            this.graphics = graphics;
+            var gamePadState = GamePad.GetState(PlayerIndex.One);
+            if (PadPitchYaw)
+            {
+                Yaw(-gamePadState.ThumbSticks.Right.X * 0.05f);
+                Pitch(gamePadState.ThumbSticks.Right.Y * 0.05f);
+            }
+
+            var mouseState = Mouse.GetState();
+            if (graphics.Viewport.Bounds.Contains(mouseState.X, mouseState.Y))
+            {
+                if (MousePitchYaw && mouseState.LeftButton == ButtonState.Pressed &&
+                    lastMouseState.LeftButton == ButtonState.Pressed)
+                {
+                    float changeY = mouseState.Y - lastMouseState.Y;
+                    Pitch(-changeY * 0.005f);
+
+                    float changeX = mouseState.X - lastMouseState.X;
+                    Yaw(changeX * 0.005f);
+                }
+
+                if (MousePanTilt && mouseState.RightButton == ButtonState.Pressed &&
+                    lastMouseState.RightButton == ButtonState.Pressed)
+                {
+                    float changeY = mouseState.Y - lastMouseState.Y;
+                    Tilt(changeY * 0.0025f);
+
+                    float changeX = mouseState.X - lastMouseState.X;
+                    Pan(changeX * 0.0025f);
+                }
+
+                lastMouseState = mouseState;
+            }
         }
 
         public void Initialize()
@@ -153,10 +139,6 @@ namespace BetterSkinnedSample
             ComputeProjection();
             lastMouseState = Mouse.GetState();
         }
-
-        #endregion
-
-        #region Matrix Computations
 
         private void ComputeView()
         {
@@ -168,10 +150,6 @@ namespace BetterSkinnedSample
             Projection = Matrix.CreatePerspectiveFieldOfView(fov,
                 graphics.GraphicsDevice.Viewport.AspectRatio, znear, zfar);
         }
-
-        #endregion
-
-        #region Camera Control
 
         public void Pitch(float angle)
         {
@@ -234,7 +212,6 @@ namespace BetterSkinnedSample
             ComputeView();
         }
 
-
         public void Pan(float angle)
         {
             // Need a vector in the camera X direction.
@@ -255,7 +232,5 @@ namespace BetterSkinnedSample
             center = Vector3.Transform(center, M);
             ComputeView();
         }
-
-        #endregion
     }
 }

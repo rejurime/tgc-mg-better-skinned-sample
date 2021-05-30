@@ -5,8 +5,8 @@ namespace BetterSkinnedSample
 {
     /// <summary>
     ///     Bones in this model are represented by this class, which allows a bone to have more detail associatd with it.
-    ///     This class allows you to manipulate the local coordinate system for objects by changing the scaling, translation,
-    ///     and rotation.
+    ///     This class allows you to manipulate the local coordinate system for objects by changing the scaling, Translation,
+    ///     and Rotation.
     ///     These are indepenent of the bind transformation originally supplied for the model.
     ///     So, the actual transformation for a bone is the product of the:
     ///     Scaling
@@ -18,131 +18,28 @@ namespace BetterSkinnedSample
     /// </summary>
     public class Bone
     {
-        #region Fields
-
-        /// <summary>
-        ///     Any parent for this bone.
-        /// </summary>
-        private readonly Bone parent;
-
-        /// <summary>
-        ///     The children of this bone.
-        /// </summary>
-        private readonly List<Bone> children = new List<Bone>();
-
-        /// <summary>
-        ///     The bind transform is the transform for this bone as loaded from the original model. It's the base pose.
-        ///     I do remove any scaling, though.
-        /// </summary>
-        private readonly Matrix bindTransform = Matrix.Identity;
-
-        /// <summary>
-        ///     The bind scaling component extracted from the bind transform.
-        /// </summary>
-        private readonly Vector3 bindScale = Vector3.One;
-
-        /// <summary>
-        ///     Any translation applied to the bone.
-        /// </summary>
-        private Vector3 translation = Vector3.Zero;
-
-        /// <summary>
-        ///     Any rotation applied to the bone.
-        /// </summary>
-        private Quaternion rotation = Quaternion.Identity;
-
-        /// <summary>
-        ///     Any scaling applied to the bone.
-        /// </summary>
-        private Vector3 scale = Vector3.One;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///     The bone name.
-        /// </summary>
-        public string Name = "";
-
-        /// <summary>
-        ///     The bone bind transform.
-        /// </summary>
-        public Matrix BindTransform => bindTransform;
-
-        /// <summary>
-        ///     Inverse of absolute bind transform for skinning.
-        /// </summary>
-        public Matrix SkinTransform { get; set; }
-
-        /// <summary>
-        ///     Bone rotation.
-        /// </summary>
-        public Quaternion Rotation
-        {
-            get => rotation;
-            set => rotation = value;
-        }
-
-        /// <summary>
-        ///     Any translations.
-        /// </summary>
-        public Vector3 Translation
-        {
-            get => translation;
-            set => translation = value;
-        }
-
-        /// <summary>
-        ///     Any scaling.
-        /// </summary>
-        public Vector3 Scale
-        {
-            get => scale;
-            set => scale = value;
-        }
-
-        /// <summary>
-        ///     The parent bone or null for the root bone.
-        /// </summary>
-        public Bone Parent => parent;
-
-        /// <summary>
-        ///     The children of this bone.
-        /// </summary>
-        public List<Bone> Children => children;
-
-        /// <summary>
-        ///     The bone absolute transform.
-        /// </summary>
-        public Matrix AbsoluteTransform = Matrix.Identity;
-
-        #endregion
-
-        #region Operations
-
         /// <summary>
         ///     Constructor for a bone object.
         /// </summary>
         /// <param name="name">The name of the bone</param>
         /// <param name="bindTransform">The initial bind transform for the bone</param>
-        /// <param name="parent">A parent for this bone</param>
+        /// <param name="parent">A Parent for this bone</param>
         public Bone(string name, Matrix bindTransform, Bone parent)
         {
             Name = name;
-            this.parent = parent;
+            Parent = parent;
             if (parent != null)
-                parent.children.Add(this);
+                parent.Children.Add(this);
 
             // I am not supporting scaling in animation in this example, so I extract the bind scaling from the bind transform and save it. 
 
-            bindScale = new Vector3(bindTransform.Right.Length(),
+            BindScale = new Vector3(bindTransform.Right.Length(),
                 bindTransform.Up.Length(), bindTransform.Backward.Length());
 
-            bindTransform.Right = bindTransform.Right / bindScale.X;
-            bindTransform.Up = bindTransform.Up / bindScale.Y;
-            bindTransform.Backward = bindTransform.Backward / bindScale.Y;
-            this.bindTransform = bindTransform;
+            bindTransform.Right = bindTransform.Right / BindScale.X;
+            bindTransform.Up = bindTransform.Up / BindScale.Y;
+            bindTransform.Backward = bindTransform.Backward / BindScale.Y;
+            BindTransform = bindTransform;
 
             // Set the skinning bind transform.
             // That is the inverse of the absolute transform in the bind pose.
@@ -152,15 +49,66 @@ namespace BetterSkinnedSample
         }
 
         /// <summary>
+        ///     The bind scaling component extracted from the bind transform.
+        /// </summary>
+        private Vector3 BindScale { get; }
+
+        /// <summary>
+        ///     The bind transform is the transform for this bone as loaded from the original model. It's the base pose.
+        ///     I do remove any scaling, though.
+        /// </summary>
+        private Matrix BindTransform { get; }
+
+        /// <summary>
+        ///     The Children of this bone.
+        /// </summary>
+        private List<Bone> Children { get; } = new List<Bone>();
+
+        /// <summary>
+        ///     The Parent bone or null for the root bone.
+        /// </summary>
+        private Bone Parent { get; }
+
+        /// <summary>
+        ///     The bone absolute transform.
+        /// </summary>
+        public Matrix AbsoluteTransform { get; set; } = Matrix.Identity;
+
+        /// <summary>
+        ///     The bone name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Any Rotation applied to the bone.
+        /// </summary>
+        private Quaternion Rotation { get; set; } = Quaternion.Identity;
+
+        /// <summary>
+        ///     Any scaling applied to the bone.
+        /// </summary>
+        private Vector3 Scale { get; } = Vector3.One;
+
+        /// <summary>
+        ///     Any Translation applied to the bone.
+        /// </summary>
+        private Vector3 Translation { get; set; } = Vector3.Zero;
+
+        /// <summary>
+        ///     Inverse of absolute bind transform for skinning.
+        /// </summary>
+        public Matrix SkinTransform { get; set; }
+
+        /// <summary>
         ///     Compute the absolute transformation for this bone.
         /// </summary>
         public void ComputeAbsoluteTransform()
         {
-            var transform = Matrix.CreateScale(Scale * bindScale) * Matrix.CreateFromQuaternion(Rotation) *
+            var transform = Matrix.CreateScale(Scale * BindScale) * Matrix.CreateFromQuaternion(Rotation) *
                             Matrix.CreateTranslation(Translation) * BindTransform;
 
             if (Parent != null)
-                // This bone has a parent bone.
+                // This bone has a Parent bone.
                 AbsoluteTransform = transform * Parent.AbsoluteTransform;
             else
                 // The root bone.
@@ -168,10 +116,10 @@ namespace BetterSkinnedSample
         }
 
         /// <summary>
-        ///     This sets the rotation and translation such that the rotation times the translation times the bind after set equals
+        ///     This sets the Rotation and Translation such that the Rotation times the Translation times the bind after set equals
         ///     this matrix. This is used to set animation values.
         /// </summary>
-        /// <param name="m">A matrix include translation and rotation</param>
+        /// <param name="m">A matrix include Translation and Rotation</param>
         public void SetCompleteTransform(Matrix m)
         {
             var setTo = m * Matrix.Invert(BindTransform);
@@ -179,7 +127,5 @@ namespace BetterSkinnedSample
             Translation = setTo.Translation;
             Rotation = Quaternion.CreateFromRotationMatrix(setTo);
         }
-
-        #endregion
     }
 }

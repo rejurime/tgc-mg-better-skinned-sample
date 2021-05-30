@@ -7,10 +7,8 @@ namespace BetterSkinnedSample
         [STAThread]
         private static void Main()
         {
-            using (var game = new SkinnedGame())
-            {
-                game.Run();
-            }
+            using var game = new SkinnedGame();
+            game.Run();
         }
     }
 }

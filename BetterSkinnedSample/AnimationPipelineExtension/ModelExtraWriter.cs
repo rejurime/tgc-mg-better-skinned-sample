@@ -7,10 +7,10 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
     [ContentTypeWriter]
     public class ModelExtraWriter : ContentTypeWriter<ModelExtra>
     {
-        protected override void Write(ContentWriter output, ModelExtra extra)
+        protected override void Write(ContentWriter output, ModelExtra value)
         {
-            output.WriteObject(extra.Skeleton);
-            output.WriteObject(extra.Clips);
+            output.WriteObject(value.Skeleton);
+            output.WriteObject(value.Clips);
         }
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform)

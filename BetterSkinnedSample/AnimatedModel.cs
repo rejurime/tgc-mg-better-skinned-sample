@@ -8,73 +8,101 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BetterSkinnedSample
 {
     /// <summary>
-    ///     An encloser for an XNA model that we will use that includes support for bones, animation, and some manipulations.
+    ///     An encloser for an XNA Model that we will use that includes support for Bones, animation, and some manipulations.
     /// </summary>
     public class AnimatedModel
     {
-        #region Animation Management
+        /// <summary>
+        ///     Creates the Model from an XNA Model.
+        /// </summary>
+        /// <param name="assetName">The name of the asset for this Model</param>
+        public AnimatedModel(string assetName)
+        {
+            AssetName = assetName;
+        }
+
+        /// <summary>
+        ///     The Model asset name.
+        /// </summary>
+        private string AssetName { get; }
+
+        /// <summary>
+        ///     The underlying Bones for the Model.
+        /// </summary>
+        private List<Bone> Bones { get; } = new List<Bone>();
+
+        /// <summary>
+        ///     The actual underlying XNA Model.
+        /// </summary>
+        private Model Model { get; set; }
+
+        /// <summary>
+        ///     Extra data associated with the XNA Model.
+        /// </summary>
+        private ModelExtra ModelExtra { get; set; }
+
+        /// <summary>
+        ///     An associated animation clip Player.
+        /// </summary>
+        private AnimationPlayer Player { get; set; }
+
+        /// <summary>
+        ///     The Model animation clips.
+        /// </summary>
+        public List<AnimationClip> Clips => ModelExtra.Clips;
 
         /// <summary>
         ///     Play an animation clip.
         /// </summary>
         /// <param name="clip">The clip to play</param>
-        /// <returns>The player that will play this clip</returns>
+        /// <returns>The Player that will play this clip</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
-            // Create a clip player and assign it to this model.
-            player = new AnimationPlayer(clip, this);
-            return player;
+            // Create a clip Player and assign it to this Model.
+            Player = new AnimationPlayer(clip, this);
+            return Player;
         }
 
-        #endregion
-
-        #region Updating
-
         /// <summary>
-        ///     Update animation for the model.
+        ///     Update animation for the Model.
         /// </summary>
-        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            if (player != null) player.Update(gameTime);
+            if (Player != null) Player.Update(gameTime);
         }
 
-        #endregion
-
-        #region Drawing
-
         /// <summary>
-        ///     Draw the model.
+        ///     Draw the Model.
         /// </summary>
         /// <param name="graphics">The graphics device to draw on</param>
         /// <param name="camera">A camera to determine the view</param>
-        /// <param name="world">A world matrix to place the model</param>
+        /// <param name="world">A world matrix to place the Model</param>
         public void Draw(GraphicsDevice graphics, Camera camera, Matrix world)
         {
-            if (model == null)
+            if (Model == null)
                 return;
 
             // Compute all of the bone absolute transforms.
-            var boneTransforms = new Matrix[bones.Count];
+            var boneTransforms = new Matrix[Bones.Count];
 
-            for (var i = 0; i < bones.Count; i++)
+            for (var i = 0; i < Bones.Count; i++)
             {
-                var bone = bones[i];
+                var bone = Bones[i];
                 bone.ComputeAbsoluteTransform();
 
                 boneTransforms[i] = bone.AbsoluteTransform;
             }
 
             // Determine the skin transforms from the skeleton
-            var skeleton = new Matrix[modelExtra.Skeleton.Count];
-            for (var s = 0; s < modelExtra.Skeleton.Count; s++)
+            var skeleton = new Matrix[ModelExtra.Skeleton.Count];
+            for (var s = 0; s < ModelExtra.Skeleton.Count; s++)
             {
-                var bone = bones[modelExtra.Skeleton[s]];
+                var bone = Bones[ModelExtra.Skeleton[s]];
                 skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
             }
 
-            // Draw the model.
-            foreach (var modelMesh in model.Meshes)
+            // Draw the Model.
+            foreach (var modelMesh in Model.Meshes)
             {
                 foreach (var effect in modelMesh.Effects)
                 {
@@ -104,107 +132,39 @@ namespace BetterSkinnedSample
             }
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
-        ///     The actual underlying XNA model.
+        ///     Load the Model asset from content.
         /// </summary>
-        private Model model;
-
-        /// <summary>
-        ///     Extra data associated with the XNA model.
-        /// </summary>
-        private ModelExtra modelExtra;
-
-        /// <summary>
-        ///     The model bones.
-        /// </summary>
-        private readonly List<Bone> bones = new List<Bone>();
-
-        /// <summary>
-        ///     The model asset name.
-        /// </summary>
-        private readonly string assetName = "";
-
-        /// <summary>
-        ///     An associated animation clip player.
-        /// </summary>
-        private AnimationPlayer player;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///     The actual underlying XNA model.
-        /// </summary>
-        public Model Model => model;
-
-        /// <summary>
-        ///     The underlying bones for the model.
-        /// </summary>
-        public List<Bone> Bones => bones;
-
-        /// <summary>
-        ///     The model animation clips.
-        /// </summary>
-        public List<AnimationClip> Clips => modelExtra.Clips;
-
-        #endregion
-
-        #region Construction and Loading
-
-        /// <summary>
-        ///     Constructor. Creates the model from an XNA model.
-        /// </summary>
-        /// <param name="assetName">The name of the asset for this model</param>
-        public AnimatedModel(string assetName)
-        {
-            this.assetName = assetName;
-        }
-
-        /// <summary>
-        ///     Load the model asset from content.
-        /// </summary>
-        /// <param name="content"></param>
         public void LoadContent(ContentManager content)
         {
-            model = content.Load<Model>(assetName);
-            modelExtra = model.Tag as ModelExtra;
-            Debug.Assert(modelExtra != null);
+            Model = content.Load<Model>(AssetName);
+            ModelExtra = Model.Tag as ModelExtra;
+            Debug.Assert(ModelExtra != null);
 
             ObtainBones();
         }
 
-        #endregion
-
-        #region Bones Management
-
         /// <summary>
-        ///     Get the bones from the model and create a bone class object for each bone. We use our bone class to do the real
+        ///     Get the Bones from the Model and create a bone class object for each bone. We use our bone class to do the real
         ///     animated bone work.
         /// </summary>
         private void ObtainBones()
         {
-            bones.Clear();
-            foreach (var bone in model.Bones)
+            Bones.Clear();
+            foreach (var bone in Model.Bones)
             {
                 // Create the bone object and add to the hierarchy.
                 var newBone = new Bone(bone.Name, bone.Transform,
-                    bone.Parent != null ? bones[bone.Parent.Index] : null);
+                    bone.Parent != null ? Bones[bone.Parent.Index] : null);
 
-                // Add to the bones for this model.
-                bones.Add(newBone);
+                // Add to the Bones for this Model.
+                Bones.Add(newBone);
             }
         }
 
         /// <summary>
-        ///     Find a bone in this model by name.
+        ///     Find a bone in this Model by name.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public Bone FindBone(string name)
         {
             foreach (var bone in Bones)
@@ -213,7 +173,5 @@ namespace BetterSkinnedSample
 
             return null;
         }
-
-        #endregion
     }
 }

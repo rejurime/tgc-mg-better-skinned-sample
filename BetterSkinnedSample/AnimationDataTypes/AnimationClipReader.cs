@@ -11,7 +11,7 @@ namespace BetterSkinnedSample.AnimationDataTypes
             var boneCnt = input.ReadInt32();
             for (var i = 0; i < boneCnt; i++)
             {
-                var bone = new AnimationClip.Bone();
+                var bone = new Bone();
                 clip.Bones.Add(bone);
 
                 bone.Name = input.ReadString();
@@ -20,7 +20,7 @@ namespace BetterSkinnedSample.AnimationDataTypes
 
                 for (var j = 0; j < cnt; j++)
                 {
-                    var keyframe = new AnimationClip.Keyframe
+                    var keyframe = new Keyframe
                     {
                         Time = input.ReadDouble(),
                         Rotation = input.ReadQuaternion(),

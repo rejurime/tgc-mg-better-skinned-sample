@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BetterSkinnedSample.AnimationPipelineExtension;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -15,20 +16,52 @@ namespace BetterSkinnedSample
         public SkinnedGame()
         {
             // XNA startup
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             // Some basic setup for the display window
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
+            Graphics.PreferredBackBufferWidth = 1024;
+            Graphics.PreferredBackBufferHeight = 768;
 
-            // Create a simple mouse-based camera
-            camera = new Camera(graphics);
-            camera.Eye = new Vector3(190, 247, 1000);
-            camera.Center = new Vector3(-20, 86, 500);
+            // Create a simple mouse-based Camera
+            Camera = new Camera(Graphics);
+            Camera.Eye = new Vector3(190, 247, 1000);
+            Camera.Center = new Vector3(-20, 86, 500);
+
+            //Models and Animation filenames
+            ModelFileNames = new List<string> {"michelle", "ninja", "xbot", "ybot"};
+            ModelAnimationFileNames = new List<string>
+            {
+                "ninja - running", "ninja - silly dancing", "ninja - walking", "xbot - front twist flip",
+                "ybot - front flip", "ybot - kneeling pointing"
+            };
         }
+
+        /// <summary>
+        ///     The Camera we use
+        /// </summary>
+        private Camera Camera { get; }
+
+        /// <summary>
+        ///     This graphics device we are drawing on in this program
+        /// </summary>
+        private GraphicsDeviceManager Graphics { get; }
+
+        private List<string> ModelAnimationFileNames { get; }
+
+        private List<string> ModelFileNames { get; }
+
+        /// <summary>
+        ///     This Model is loaded solely for the Animation animation
+        /// </summary>
+        private AnimatedModel Animation { get; set; }
+
+        /// <summary>
+        ///     The animated Model we are displaying
+        /// </summary>
+        private AnimatedModel Model { get; set; }
 
         /// <summary>
         ///     Allows the game to perform any initialization it needs to before starting to run.
@@ -38,10 +71,10 @@ namespace BetterSkinnedSample
         protected override void Initialize()
         {
             var manager = CustomPipelineManager.CreateCustomPipelineManager();
-            manager.BuildAnimationContent(modelFilename);
-            manager.BuildAnimationContent(animationFilename);
+            manager.BuildAnimationContent(ModelFileNames[2]);
+            manager.BuildAnimationContent(ModelAnimationFileNames[4]);
 
-            camera.Initialize();
+            Camera.Initialize();
 
             base.Initialize();
         }
@@ -51,19 +84,19 @@ namespace BetterSkinnedSample
         /// </summary>
         protected override void LoadContent()
         {
-            // Load the model we will display.
-            model = new AnimatedModel(modelFilename);
-            model.LoadContent(Content);
+            // Load the Model we will display.
+            Model = new AnimatedModel(ModelFileNames[2]);
+            Model.LoadContent(Content);
 
-            // Load the model that has an animation clip it in.
-            dance = new AnimatedModel(animationFilename);
-            dance.LoadContent(Content);
+            // Load the Model that has an animation clip it in.
+            Animation = new AnimatedModel(ModelAnimationFileNames[4]);
+            Animation.LoadContent(Content);
 
-            // Obtain the clip we want to play. I'm using an absolute index, because XNA 4.0 won't allow you to have more than one animation associated with a model, anyway. It would be easy to add code to look up the clip by name and to index it by name in the model.
-            var clip = dance.Clips[0];
+            // Obtain the clip we want to play. I'm using an absolute index, because XNA 4.0 won't allow you to have more than one animation associated with a Model, anyway. It would be easy to add code to look up the clip by name and to index it by name in the Model.
+            var clip = Animation.Clips[0];
 
             // And play the clip.
-            var player = model.PlayClip(clip);
+            var player = Model.PlayClip(clip);
             player.Looping = true;
         }
 
@@ -79,9 +112,9 @@ namespace BetterSkinnedSample
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            model.Update(gameTime);
+            Model.Update(gameTime);
 
-            camera.Update(graphics.GraphicsDevice, gameTime);
+            Camera.Update(Graphics.GraphicsDevice, gameTime);
             base.Update(gameTime);
         }
 
@@ -91,9 +124,9 @@ namespace BetterSkinnedSample
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.LightGray);
+            Graphics.GraphicsDevice.Clear(Color.LightGray);
 
-            model.Draw(graphics.GraphicsDevice, camera, Matrix.Identity);
+            Model.Draw(Graphics.GraphicsDevice, Camera, Matrix.Identity);
 
             base.Draw(gameTime);
         }
@@ -103,44 +136,7 @@ namespace BetterSkinnedSample
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Unload any non ContentManager content here
         }
-
-        #region Fields
-
-        /// <summary>
-        ///     This graphics device we are drawing on in this program
-        /// </summary>
-        private readonly GraphicsDeviceManager graphics;
-
-        /// <summary>
-        ///     The camera we use
-        /// </summary>
-        private readonly Camera camera;
-
-        /// <summary>
-        ///     The animated model we are displaying
-        /// </summary>
-        private AnimatedModel model;
-
-        //private string modelFilename = "michelle";
-        //private string modelFilename = "ninja";
-        //private string modelFilename = "xbot";
-        private readonly string modelFilename = "ybot";
-
-
-        /// <summary>
-        ///     This model is loaded solely for the dance animation
-        /// </summary>
-        private AnimatedModel dance;
-
-        //private string animationFilename = "ninja - running";
-        //private string animationFilename = "ninja - silly dancing";
-        //private string animationFilename = "ninja - walking";
-        private readonly string animationFilename = "xbot - front twist flip";
-        //private string animationFilename = "ybot - front flip";
-        //private readonly string animationFilename = "ybot - kneeling pointing";
-
-        #endregion
     }
 }

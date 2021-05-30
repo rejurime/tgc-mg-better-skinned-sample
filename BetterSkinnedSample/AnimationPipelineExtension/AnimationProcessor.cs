@@ -14,6 +14,19 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
     [ContentProcessor(DisplayName = "Animation Processor")]
     public class AnimationProcessor : ModelProcessor
     {
+        private const float TinyLength = 1e-8f;
+        private const float TinyCosAngle = 0.9999999f;
+
+        /// <summary>
+        ///     Bones lookup table, converts bone names to indices.
+        /// </summary>
+        private readonly Dictionary<string, int> bones = new Dictionary<string, int>();
+
+        /// <summary>
+        ///     A dictionary so we can keep track of the clips by name.
+        /// </summary>
+        private readonly Dictionary<string, AnimationClip> clips = new Dictionary<string, AnimationClip>();
+
         /// <summary>
         ///     Extra content to associated with the model. This is where we put the stuff that is unique to this project.
         /// </summary>
@@ -26,6 +39,11 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             new Dictionary<MaterialContent, SkinnedMaterialContent>();
 
         /// <summary>
+        ///     This will keep track of all of the bone transforms for a base pose.
+        /// </summary>
+        private Matrix[] boneTransforms;
+
+        /// <summary>
         ///     The model we are reading
         /// </summary>
         private ModelContent model;
@@ -33,18 +51,19 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         /// <summary>
         ///     The function to process a model from original content into model content for export.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
         public override ModelContent Process(NodeContent input, ContentProcessorContext context)
         {
+            // Skeleton Support.
             // Process the skeleton for skinned character animation.
             var skeleton = ProcessSkeleton(input);
 
+            // Skinned Support.
             SwapSkinnedMaterial(input);
 
+            // Base Model process
             model = base.Process(input, context);
 
+            // Animation Support.
             ProcessAnimations(model, input, context);
 
             // Add the extra content to the model.
@@ -53,12 +72,9 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             return model;
         }
 
-        #region Skeleton Support
-
         /// <summary>
         ///     Process the skeleton in support of skeletal animation.
         /// </summary>
-        /// <param name="input"></param>
         private BoneContent ProcessSkeleton(NodeContent input)
         {
             // Find the skeleton.
@@ -91,7 +107,6 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         ///     Convert a tree of nodes into a list of nodes in topological order.
         /// </summary>
         /// <param name="item">The root of the hierarchy</param>
-        /// <returns></returns>
         private List<NodeContent> FlattenHierarchy(NodeContent item)
         {
             var nodes = new List<NodeContent>();
@@ -126,7 +141,6 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         /// <summary>
         ///     Recursively flatten all transforms from this node down.
         /// </summary>
-        /// <param name="node"></param>
         private void FlattenAllTransforms(NodeContent node)
         {
             // Bake the local transform into the actual geometry.
@@ -146,26 +160,20 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         /// <param name="skeleton">Root of the skeleton tree</param>
         private void TrimSkeleton(NodeContent skeleton)
         {
-            var todelete = new List<NodeContent>();
+            var toDelete = new List<NodeContent>();
 
             foreach (var child in skeleton.Children)
                 if (child.Name.EndsWith("Nub") || child.Name.EndsWith("Footsteps"))
-                    todelete.Add(child);
+                    toDelete.Add(child);
                 else
                     TrimSkeleton(child);
 
-            foreach (var child in todelete) skeleton.Children.Remove(child);
+            foreach (var child in toDelete) skeleton.Children.Remove(child);
         }
-
-        #endregion
-
-        #region Skinned Support
 
         /// <summary>
         ///     Determine if a node is a skinned node, meaning it has bone weights associated with it.
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
         private bool IsSkinned(NodeContent node)
         {
             // It has to be a MeshContent node.
@@ -184,7 +192,6 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         ///     If a node is skinned, we need to use the skinned model effect rather than basic effect. This function runs through
         ///     the geometry and finds the meshes that have bone weights associated and swaps in the skinned effect.
         /// </summary>
-        /// <param name="node"></param>
         private void SwapSkinnedMaterial(NodeContent node)
         {
             // It has to be a MeshContent node.
@@ -231,31 +238,9 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             foreach (var child in node.Children) SwapSkinnedMaterial(child);
         }
 
-        #endregion
-
-        #region Animation Support
-
-        /// <summary>
-        ///     Bones lookup table, converts bone names to indices.
-        /// </summary>
-        private readonly Dictionary<string, int> bones = new Dictionary<string, int>();
-
-        /// <summary>
-        ///     This will keep track of all of the bone transforms for a base pose.
-        /// </summary>
-        private Matrix[] boneTransforms;
-
-        /// <summary>
-        ///     A dictionary so we can keep track of the clips by name.
-        /// </summary>
-        private readonly Dictionary<string, AnimationClip> clips = new Dictionary<string, AnimationClip>();
-
         /// <summary>
         ///     Entry point for animation processing.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
         private void ProcessAnimations(ModelContent model, NodeContent input, ContentProcessorContext context)
         {
             // First build a lookup table so we can determine the index into the list of bones from a bone name.
@@ -282,7 +267,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 clip.Name = clipName;
                 foreach (var bone in model.Bones)
                 {
-                    var clipBone = new AnimationClip.Bone();
+                    var clipBone = new AnimationDataTypes.Bone();
                     clipBone.Name = bone.Name;
 
                     clip.Bones.Add(clipBone);
@@ -296,7 +281,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     var keyframes = clip.Bones[b].Keyframes;
                     if (keyframes.Count == 0 || keyframes[0].Time > 0)
                     {
-                        var keyframe = new AnimationClip.Keyframe();
+                        var keyframe = new Keyframe();
                         keyframe.Time = 0;
                         keyframe.Transform = boneTransforms[b];
                         keyframes.Insert(0, keyframe);
@@ -333,7 +318,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     clip.Name = clipName;
                     foreach (var bone in model.Bones)
                     {
-                        var clipBone = new AnimationClip.Bone();
+                        var clipBone = new AnimationDataTypes.Bone();
                         clipBone.Name = bone.Name;
 
                         clip.Bones.Add(clipBone);
@@ -358,12 +343,12 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                         continue;
 
                     // I'm collecting up in a linked list so we can process the data and remove redundant keyframes.
-                    var keyframes = new LinkedList<AnimationClip.Keyframe>();
+                    var keyframes = new LinkedList<Keyframe>();
                     foreach (var keyframe in channel.Value)
                     {
                         var transform = keyframe.Transform; // Keyframe transformation.
 
-                        var newKeyframe = new AnimationClip.Keyframe();
+                        var newKeyframe = new Keyframe();
                         newKeyframe.Time = keyframe.Time.TotalSeconds;
                         newKeyframe.Transform = transform;
 
@@ -378,14 +363,10 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             foreach (var child in input.Children) ProcessAnimationsRecursive(child);
         }
 
-        private const float TinyLength = 1e-8f;
-        private const float TinyCosAngle = 0.9999999f;
-
         /// <summary>
         ///     This function filters out keyframes that can be approximated well with linear interpolation.
         /// </summary>
-        /// <param name="keyframes"></param>
-        private void LinearKeyframeReduction(LinkedList<AnimationClip.Keyframe> keyframes)
+        private void LinearKeyframeReduction(LinkedList<Keyframe> keyframes)
         {
             if (keyframes.Count < 3)
                 return;
@@ -418,8 +399,6 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         /// <summary>
         ///     Discard any animation not assigned to a mesh or the skeleton.
         /// </summary>
-        /// <param name="boneId"></param>
-        /// <returns></returns>
         private bool UselessAnimationTest(int boneId)
         {
             // If any mesh is assigned to this bone, it is not useless.
@@ -435,7 +414,5 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             // Otherwise, it is useless.
             return true;
         }
-
-        #endregion
     }
 }

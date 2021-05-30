@@ -7,12 +7,12 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
     [ContentTypeWriter]
     public class AnimationClipWriter : ContentTypeWriter<AnimationClip>
     {
-        protected override void Write(ContentWriter output, AnimationClip clip)
+        protected override void Write(ContentWriter output, AnimationClip value)
         {
-            output.Write(clip.Name);
-            output.Write(clip.Duration);
-            output.Write(clip.Bones.Count);
-            foreach (var bone in clip.Bones)
+            output.Write(value.Name);
+            output.Write(value.Duration);
+            output.Write(value.Bones.Count);
+            foreach (var bone in value.Bones)
             {
                 output.Write(bone.Name);
                 output.Write(bone.Keyframes.Count);
