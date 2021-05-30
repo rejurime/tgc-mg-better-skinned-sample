@@ -267,7 +267,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 clip.Name = clipName;
                 foreach (var bone in model.Bones)
                 {
-                    var clipBone = new AnimationDataTypes.Bone();
+                    var clipBone = new Bone();
                     clipBone.Name = bone.Name;
 
                     clip.Bones.Add(clipBone);
@@ -318,7 +318,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     clip.Name = clipName;
                     foreach (var bone in model.Bones)
                     {
-                        var clipBone = new AnimationDataTypes.Bone();
+                        var clipBone = new Bone();
                         clipBone.Name = bone.Name;
 
                         clip.Bones.Add(clipBone);

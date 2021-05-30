@@ -1,7 +1,7 @@
 ﻿using BetterSkinnedSample.AnimationDataTypes;
 using Microsoft.Xna.Framework;
 
-namespace BetterSkinnedSample
+namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
     ///     Animation Clip player.

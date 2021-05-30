@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace BetterSkinnedSample
+namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
     ///     Bones in this model are represented by this class, which allows a bone to have more detail associatd with it.

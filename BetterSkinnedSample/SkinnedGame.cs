@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BetterSkinnedSample.AnimationModel;
 using BetterSkinnedSample.AnimationPipelineExtension;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;

@@ -1,7 +1,7 @@
 ﻿using BetterSkinnedSample.AnimationDataTypes;
 using Microsoft.Xna.Framework;
 
-namespace BetterSkinnedSample
+namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
     ///     Information about a bone we are animating. This class connects a bone in the clip to a bone in the model.

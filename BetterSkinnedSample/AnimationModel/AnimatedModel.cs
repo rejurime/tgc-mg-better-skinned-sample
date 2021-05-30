@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BetterSkinnedSample
+namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
     ///     An encloser for an XNA Model that we will use that includes support for Bones, animation, and some manipulations.
