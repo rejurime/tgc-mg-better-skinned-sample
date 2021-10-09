@@ -68,7 +68,7 @@ namespace BetterSkinnedSample.AnimationModel
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            if (Player != null) Player.Update(gameTime);
+            Player?.Update(gameTime);
         }
 
         /// <summary>
@@ -106,25 +106,23 @@ namespace BetterSkinnedSample.AnimationModel
             {
                 foreach (var effect in modelMesh.Effects)
                 {
-                    if (effect is BasicEffect)
+                    switch (effect)
                     {
-                        var beffect = effect as BasicEffect;
-                        beffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
-                        beffect.View = camera.View;
-                        beffect.Projection = camera.Projection;
-                        beffect.EnableDefaultLighting();
-                        beffect.PreferPerPixelLighting = true;
-                    }
-
-                    if (effect is SkinnedEffect)
-                    {
-                        var seffect = effect as SkinnedEffect;
-                        seffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
-                        seffect.View = camera.View;
-                        seffect.Projection = camera.Projection;
-                        seffect.EnableDefaultLighting();
-                        seffect.PreferPerPixelLighting = true;
-                        seffect.SetBoneTransforms(skeleton);
+                        case BasicEffect basicEffect:
+                            basicEffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
+                            basicEffect.View = camera.View;
+                            basicEffect.Projection = camera.Projection;
+                            basicEffect.EnableDefaultLighting();
+                            basicEffect.PreferPerPixelLighting = true;
+                            break;
+                        case SkinnedEffect skinnedEffect:
+                            skinnedEffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
+                            skinnedEffect.View = camera.View;
+                            skinnedEffect.Projection = camera.Projection;
+                            skinnedEffect.EnableDefaultLighting();
+                            skinnedEffect.PreferPerPixelLighting = true;
+                            skinnedEffect.SetBoneTransforms(skeleton);
+                            break;
                     }
                 }
 

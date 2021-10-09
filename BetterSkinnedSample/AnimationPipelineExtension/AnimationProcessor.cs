@@ -195,14 +195,13 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private void SwapSkinnedMaterial(NodeContent node)
         {
             // It has to be a MeshContent node.
-            var mesh = node as MeshContent;
-            if (mesh != null)
+            if (node is MeshContent mesh)
                 // In the geometry we have to find a vertex channel that has a bone weight collection.
                 foreach (var geometry in mesh.Geometry)
                 {
                     var swap = false;
-                    foreach (var vchannel in geometry.Vertices.Channels)
-                        if (vchannel is VertexChannel<BoneWeightCollection>)
+                    foreach (var vertexChannel in geometry.Vertices.Channels)
+                        if (vertexChannel is VertexChannel<BoneWeightCollection>)
                         {
                             swap = true;
                             break;
@@ -217,25 +216,29 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                         }
                         else
                         {
-                            var smaterial = new SkinnedMaterialContent();
-                            var bmaterial = geometry.Material as BasicMaterialContent;
+                            var skinnedMaterial = new SkinnedMaterialContent();
 
                             // Copy over the data.
-                            smaterial.Alpha = bmaterial.Alpha;
-                            smaterial.DiffuseColor = bmaterial.DiffuseColor;
-                            smaterial.EmissiveColor = bmaterial.EmissiveColor;
-                            smaterial.SpecularColor = bmaterial.SpecularColor;
-                            smaterial.SpecularPower = bmaterial.SpecularPower;
-                            smaterial.Texture = bmaterial.Texture;
-                            smaterial.WeightsPerVertex = 4;
+                            if (geometry.Material is BasicMaterialContent basicMaterial)
+                            {
+                                skinnedMaterial.Alpha = basicMaterial.Alpha;
+                                skinnedMaterial.DiffuseColor = basicMaterial.DiffuseColor;
+                                skinnedMaterial.EmissiveColor = basicMaterial.EmissiveColor;
+                                skinnedMaterial.SpecularColor = basicMaterial.SpecularColor;
+                                skinnedMaterial.SpecularPower = basicMaterial.SpecularPower;
+                                skinnedMaterial.Texture = basicMaterial.Texture;
+                            }
 
-                            toSkinnedMaterial[geometry.Material] = smaterial;
-                            geometry.Material = smaterial;
+                            skinnedMaterial.WeightsPerVertex = 4;
+
+                            toSkinnedMaterial[geometry.Material] = skinnedMaterial;
+                            geometry.Material = skinnedMaterial;
                         }
                     }
                 }
 
-            foreach (var child in node.Children) SwapSkinnedMaterial(child);
+            foreach (var child in node.Children) 
+                SwapSkinnedMaterial(child);
         }
 
         /// <summary>
@@ -244,7 +247,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private void ProcessAnimations(ModelContent model, NodeContent input, ContentProcessorContext context)
         {
             // First build a lookup table so we can determine the index into the list of bones from a bone name.
-            for (var i = 0; i < model.Bones.Count; i++) bones[model.Bones[i].Name] = i;
+            for (var i = 0; i < model.Bones.Count; i++) 
+                bones[model.Bones[i].Name] = i;
 
             // For saving the bone transforms
             boneTransforms = new Matrix[model.Bones.Count];
@@ -295,18 +299,16 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private void ProcessAnimationsRecursive(NodeContent input)
         {
             // Look up the bone for this input channel.
-            int inputBoneIndex;
-            if (bones.TryGetValue(input.Name, out inputBoneIndex))
+            if (bones.TryGetValue(input.Name, out var inputBoneIndex))
                 // Save the transform.
                 boneTransforms[inputBoneIndex] = input.Transform;
 
             foreach (var animation in input.Animations)
             {
                 // Do we have this animation before?
-                AnimationClip clip;
                 var clipName = animation.Key;
 
-                if (!clips.TryGetValue(clipName, out clip))
+                if (!clips.TryGetValue(clipName, out var clip))
                 {
                     // Never seen before clip.
                     clip = new AnimationClip();
@@ -334,8 +336,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 foreach (var channel in animation.Value.Channels)
                 {
                     // What is the bone index?
-                    int boneIndex;
-                    if (!bones.TryGetValue(channel.Key, out boneIndex))
+                    if (!bones.TryGetValue(channel.Key, out var boneIndex))
                         continue; // Ignore if not a named bone.
 
                     // An animation is useless if it is for a bone not assigned to any meshes at all.
@@ -360,7 +361,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 }
             }
 
-            foreach (var child in input.Children) ProcessAnimationsRecursive(child);
+            foreach (var child in input.Children) 
+                ProcessAnimationsRecursive(child);
         }
 
         /// <summary>

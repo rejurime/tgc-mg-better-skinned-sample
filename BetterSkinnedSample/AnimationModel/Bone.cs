@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework;
 namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
-    ///     Bones in this model are represented by this class, which allows a bone to have more detail associatd with it.
+    ///     Bones in this model are represented by this class, which allows a bone to have more detail associate with it.
     ///     This class allows you to manipulate the local coordinate system for objects by changing the scaling, Translation,
     ///     and Rotation.
-    ///     These are indepenent of the bind transformation originally supplied for the model.
+    ///     These are independent of the bind transformation originally supplied for the model.
     ///     So, the actual transformation for a bone is the product of the:
     ///     Scaling
     ///     Bind scaling (scaling removed from the bind transform)

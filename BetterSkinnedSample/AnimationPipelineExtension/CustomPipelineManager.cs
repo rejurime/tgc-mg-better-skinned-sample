@@ -31,7 +31,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             var projectDirectory = PathHelper.Normalize(Directory.GetCurrentDirectory());
             var projectContentDirectory =
                 PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectDirectory, "../../../" + ContentFolder)));
-            var outputPath = projectDirectory;
+            var outputPath = projectDirectory + "/" + ContentFolder;
             var projectDirectoryParts = projectDirectory.Split(new[] {BinFolder}, StringSplitOptions.None);
             var intermediatePath = PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectContentDirectory,
                 "../" + ObjFolder + projectDirectoryParts[projectDirectoryParts.Length - 1])));
@@ -68,7 +68,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             var pipelineEvent = new PipelineBuildEvent
             {
                 SourceFile = modelFilename,
-                DestFile = OutputDirectory + ContentFolder + modelFilename + ContentExtension,
+                DestFile = OutputDirectory + modelFilename + ContentExtension,
                 Importer = FbxImporterName,
                 Processor = ProcessorName,
                 Parameters = ValidateProcessorParameters(ProcessorName, parameters)
@@ -88,8 +88,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
 
             Directory.CreateDirectory(outputFileDir);
 
-            if (Compiler == null)
-                Compiler = new ContentCompiler();
+            Compiler ??= new ContentCompiler();
 
             // Write the XNB.
             using (var stream =

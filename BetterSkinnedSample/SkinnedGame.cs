@@ -31,12 +31,11 @@ namespace BetterSkinnedSample
             Camera.Eye = new Vector3(190, 247, 1000);
             Camera.Center = new Vector3(-20, 86, 500);
 
-            //Models and Animation filenames
-            ModelFileNames = new List<string> {"michelle", "ninja", "xbot", "ybot"};
+            // File names of models and animations
+            ModelFileNames = new List<string> {"michelle/michelle", "ninja/ninja", "xbot/xbot", "ybot/ybot" };
             ModelAnimationFileNames = new List<string>
             {
-                "ninja - running", "ninja - silly dancing", "ninja - walking", "xbot - front twist flip",
-                "ybot - front flip", "ybot - kneeling pointing"
+                "xbot/xbot - idle", "ybot/ybot - idle", "ybot/ybot - running", "ybot/ybot - silly dancing", "ybot/ybot - walking", "michelle/michelle - jumping"
             };
         }
 
@@ -72,8 +71,8 @@ namespace BetterSkinnedSample
         protected override void Initialize()
         {
             var manager = CustomPipelineManager.CreateCustomPipelineManager();
-            manager.BuildAnimationContent(ModelFileNames[2]);
-            manager.BuildAnimationContent(ModelAnimationFileNames[4]);
+            manager.BuildAnimationContent(ModelFileNames[0]);
+            manager.BuildAnimationContent(ModelAnimationFileNames[5]);
 
             Camera.Initialize();
 
@@ -86,14 +85,15 @@ namespace BetterSkinnedSample
         protected override void LoadContent()
         {
             // Load the Model we will display.
-            Model = new AnimatedModel(ModelFileNames[2]);
+            Model = new AnimatedModel(ModelFileNames[0]);
             Model.LoadContent(Content);
 
             // Load the Model that has an animation clip it in.
-            Animation = new AnimatedModel(ModelAnimationFileNames[4]);
+            Animation = new AnimatedModel(ModelAnimationFileNames[5]);
             Animation.LoadContent(Content);
 
-            // Obtain the clip we want to play. I'm using an absolute index, because XNA 4.0 won't allow you to have more than one animation associated with a Model, anyway. It would be easy to add code to look up the clip by name and to index it by name in the Model.
+            // Obtain the clip we want to play. I'm using an absolute index, because XNA 4.0 won't allow you to have more than one animation associated with a Model, anyway.
+            // It would be easy to add code to look up the clip by name and to index it by name in the Model.
             var clip = Animation.Clips[0];
 
             // And play the clip.
@@ -125,7 +125,7 @@ namespace BetterSkinnedSample
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Graphics.GraphicsDevice.Clear(Color.LightGray);
+            Graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             Model.Draw(Graphics.GraphicsDevice, Camera, Matrix.Identity);
 
