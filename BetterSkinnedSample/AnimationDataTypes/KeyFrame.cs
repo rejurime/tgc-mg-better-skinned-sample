@@ -8,13 +8,19 @@ namespace BetterSkinnedSample.AnimationDataTypes
     /// </summary>
     public class Keyframe
     {
-        // The rotation for the bone.
+        /// <summary>
+        ///     The rotation for the bone.
+        /// </summary>
         public Quaternion Rotation { get; set; }
 
-        // The keyframe time.
+        /// <summary>
+        ///     The keyframe time.
+        /// </summary>
         public double Time { get; set; }
 
-        // The Translation for the bone.
+        /// <summary>
+        ///     The Translation for the bone.
+        /// </summary>
         public Vector3 Translation { get; set; }
 
         public Matrix Transform

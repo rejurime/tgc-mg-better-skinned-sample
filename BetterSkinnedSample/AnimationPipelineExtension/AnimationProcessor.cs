@@ -44,7 +44,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private Matrix[] boneTransforms;
 
         /// <summary>
-        ///     The model we are reading
+        ///     The model we are reading.
         /// </summary>
         private ModelContent model;
 
@@ -60,7 +60,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             // Skinned Support.
             SwapSkinnedMaterial(input);
 
-            // Base Model process
+            // Base Model process.
             model = base.Process(input, context);
 
             // Animation Support.
@@ -95,10 +95,12 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
 
             // Create a dictionary to convert a node to an index into the array of nodes.
             var nodeToIndex = new Dictionary<NodeContent, int>();
-            for (var i = 0; i < nodes.Count; i++) nodeToIndex[nodes[i]] = i;
+            for (var i = 0; i < nodes.Count; i++)
+                nodeToIndex[nodes[i]] = i;
 
             // Now create the array that maps the bones to the nodes.
-            foreach (var bone in bones) modelExtra.Skeleton.Add(nodeToIndex[bone]);
+            foreach (var bone in bones)
+                modelExtra.Skeleton.Add(nodeToIndex[bone]);
 
             return skeleton;
         }
@@ -111,15 +113,19 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         {
             var nodes = new List<NodeContent>();
             nodes.Add(item);
-            foreach (var child in item.Children) FlattenHierarchy(nodes, child);
+
+            foreach (var child in item.Children)
+                FlattenHierarchy(nodes, child);
 
             return nodes;
         }
 
-        private void FlattenHierarchy(List<NodeContent> nodes, NodeContent item)
+        private void FlattenHierarchy(ICollection<NodeContent> nodes, NodeContent item)
         {
             nodes.Add(item);
-            foreach (var child in item.Children) FlattenHierarchy(nodes, child);
+
+            foreach (var child in item.Children)
+                FlattenHierarchy(nodes, child);
         }
 
         /// <summary>
@@ -149,7 +155,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             // Having baked it, we can now set the local coordinate system back to identity.
             node.Transform = Matrix.Identity;
 
-            foreach (var child in node.Children) FlattenAllTransforms(child);
+            foreach (var child in node.Children)
+                FlattenAllTransforms(child);
         }
 
         /// <summary>
@@ -168,7 +175,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 else
                     TrimSkeleton(child);
 
-            foreach (var child in toDelete) skeleton.Children.Remove(child);
+            foreach (var child in toDelete)
+                skeleton.Children.Remove(child);
         }
 
         /// <summary>
@@ -177,8 +185,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private bool IsSkinned(NodeContent node)
         {
             // It has to be a MeshContent node.
-            var mesh = node as MeshContent;
-            if (mesh != null)
+            if (node is MeshContent mesh)
                 // In the geometry we have to find a vertex channel that has a bone weight collection.
                 foreach (var geometry in mesh.Geometry)
                 foreach (var vchannel in geometry.Vertices.Channels)
@@ -237,7 +244,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     }
                 }
 
-            foreach (var child in node.Children) 
+            foreach (var child in node.Children)
                 SwapSkinnedMaterial(child);
         }
 
@@ -247,7 +254,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         private void ProcessAnimations(ModelContent model, NodeContent input, ContentProcessorContext context)
         {
             // First build a lookup table so we can determine the index into the list of bones from a bone name.
-            for (var i = 0; i < model.Bones.Count; i++) 
+            for (var i = 0; i < model.Bones.Count; i++)
                 bones[model.Bones[i].Name] = i;
 
             // For saving the bone transforms
@@ -357,11 +364,12 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     }
 
                     LinearKeyframeReduction(keyframes);
-                    foreach (var keyframe in keyframes) clip.Bones[boneIndex].Keyframes.Add(keyframe);
+                    foreach (var keyframe in keyframes)
+                        clip.Bones[boneIndex].Keyframes.Add(keyframe);
                 }
             }
 
-            foreach (var child in input.Children) 
+            foreach (var child in input.Children)
                 ProcessAnimationsRecursive(child);
         }
 
@@ -384,8 +392,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                 var b = node.Value;
                 var c = next.Value;
 
-                var t = (float) ((node.Value.Time - node.Previous.Value.Time) /
-                                 (next.Value.Time - node.Previous.Value.Time));
+                var t = (float)((node.Value.Time - node.Previous.Value.Time) /
+                                (next.Value.Time - node.Previous.Value.Time));
 
                 var translation = Vector3.Lerp(a.Translation, c.Translation, t);
                 var rotation = Quaternion.Slerp(a.Rotation, c.Rotation, t);

@@ -28,22 +28,19 @@ namespace BetterSkinnedSample.AnimationModel
         {
             Name = name;
             Parent = parent;
-            if (parent != null)
-                parent.Children.Add(this);
+            parent?.Children.Add(this);
 
-            // I am not supporting scaling in animation in this example, so I extract the bind scaling from the bind transform and save it. 
-
+            // I am not supporting scaling in animation in this example, so I extract the bind scaling from the bind transform and save it.
             BindScale = new Vector3(bindTransform.Right.Length(),
                 bindTransform.Up.Length(), bindTransform.Backward.Length());
 
-            bindTransform.Right = bindTransform.Right / BindScale.X;
-            bindTransform.Up = bindTransform.Up / BindScale.Y;
-            bindTransform.Backward = bindTransform.Backward / BindScale.Y;
+            bindTransform.Right /= BindScale.X;
+            bindTransform.Up /= BindScale.Y;
+            bindTransform.Backward /= BindScale.Y;
             BindTransform = bindTransform;
 
             // Set the skinning bind transform.
             // That is the inverse of the absolute transform in the bind pose.
-
             ComputeAbsoluteTransform();
             SkinTransform = Matrix.Invert(AbsoluteTransform);
         }

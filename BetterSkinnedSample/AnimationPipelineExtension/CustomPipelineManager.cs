@@ -6,13 +6,13 @@ using MonoGame.Framework.Content.Pipeline.Builder;
 
 namespace BetterSkinnedSample.AnimationPipelineExtension
 {
+    // TODO. This class needs a refactor.
     public class CustomPipelineManager : PipelineManager
     {
-        // TODO. This class needs a refactor.
-        private const string ContentFolder = "Content/";
         private const string BinFolder = "bin/";
         private const string ObjFolder = "obj/";
         private const string ContentExtension = ".xnb";
+        private const string ContentFolder = "Content/";
         private const string FbxExtension = ".fbx";
         private const string FbxImporterName = "FbxImporter";
         private const string ProcessorName = "Animation Processor";
@@ -32,7 +32,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             var projectContentDirectory =
                 PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectDirectory, "../../../" + ContentFolder)));
             var outputPath = projectDirectory + "/" + ContentFolder;
-            var projectDirectoryParts = projectDirectory.Split(new[] {BinFolder}, StringSplitOptions.None);
+            var projectDirectoryParts = projectDirectory.Split(new[] { BinFolder }, StringSplitOptions.None);
             var intermediatePath = PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectContentDirectory,
                 "../" + ObjFolder + projectDirectoryParts[projectDirectoryParts.Length - 1])));
 
@@ -48,20 +48,20 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
 
             var parameters = new OpaqueDataDictionary
             {
-                {"ColorKeyColor", "0,0,0,0"},
-                {"ColorKeyEnabled", "True"},
-                {"DefaultEffect", "BasicEffect"},
-                {"GenerateMipmaps", "True"},
-                {"GenerateTangentFrames", "False"},
-                {"PremultiplyTextureAlpha", "True"},
-                {"PremultiplyVertexColors", "True"},
-                {"ResizeTexturesToPowerOfTwo", "False"},
-                {"RotationX", "0"},
-                {"RotationY", "0"},
-                {"RotationZ", "0"},
-                {"Scale", "1"},
-                {"SwapWindingOrder", "False"},
-                {"TextureFormat", "Compressed"}
+                { "ColorKeyColor", "0,0,0,0" },
+                { "ColorKeyEnabled", "True" },
+                { "DefaultEffect", "BasicEffect" },
+                { "GenerateMipmaps", "True" },
+                { "GenerateTangentFrames", "False" },
+                { "PremultiplyTextureAlpha", "True" },
+                { "PremultiplyVertexColors", "True" },
+                { "ResizeTexturesToPowerOfTwo", "False" },
+                { "RotationX", "0" },
+                { "RotationY", "0" },
+                { "RotationZ", "0" },
+                { "Scale", "1" },
+                { "SwapWindingOrder", "False" },
+                { "TextureFormat", "Compressed" }
             };
 
             // Record what we're building and how.

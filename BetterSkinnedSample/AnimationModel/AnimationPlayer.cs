@@ -24,16 +24,16 @@ namespace BetterSkinnedSample.AnimationModel
             Model = model;
 
             // Create the bone information classes.
-            BoneCnt = clip.Bones.Count;
-            BoneInfos = new BoneInfo[BoneCnt];
+            BonesCount = clip.Bones.Count;
+            BonesInfo = new BoneInfo[BonesCount];
 
-            for (var b = 0; b < BoneInfos.Length; b++)
+            for (var b = 0; b < BonesInfo.Length; b++)
             {
                 // Create it.
-                BoneInfos[b] = new BoneInfo(clip.Bones[b]);
+                BonesInfo[b] = new BoneInfo(clip.Bones[b]);
 
                 // Assign it to a Model bone.
-                BoneInfos[b].SetModel(model);
+                BonesInfo[b].SetModel(model);
             }
 
             Rewind();
@@ -42,13 +42,13 @@ namespace BetterSkinnedSample.AnimationModel
         /// <summary>
         ///     The number of bones.
         /// </summary>
-        private int BoneCnt { get; }
+        private int BonesCount { get; }
 
         /// <summary>
         ///     We maintain a BoneInfo class for each bone.
         ///     This class does most of the work in playing the animation.
         /// </summary>
-        private BoneInfo[] BoneInfos { get; }
+        private BoneInfo[] BonesInfo { get; }
 
         /// <summary>
         ///     The Clip we are playing.
@@ -79,14 +79,14 @@ namespace BetterSkinnedSample.AnimationModel
                     value = Duration;
 
                 position = value;
-                foreach (var bone in BoneInfos) bone.SetPosition(position);
+                foreach (var bone in BonesInfo) bone.SetPosition(position);
             }
         }
 
         /// <summary>
         ///     The Clip duration.
         /// </summary>
-        public float Duration => (float) Clip.Duration;
+        public float Duration => (float)Clip.Duration;
 
         /// <summary>
         ///     Reset back to time zero.
@@ -101,7 +101,7 @@ namespace BetterSkinnedSample.AnimationModel
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            Position = Position + (float) gameTime.ElapsedGameTime.TotalSeconds;
+            Position = Position + (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (Looping && Position >= Duration)
                 Position = 0;
         }

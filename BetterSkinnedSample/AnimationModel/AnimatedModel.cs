@@ -105,7 +105,6 @@ namespace BetterSkinnedSample.AnimationModel
             foreach (var modelMesh in Model.Meshes)
             {
                 foreach (var effect in modelMesh.Effects)
-                {
                     switch (effect)
                     {
                         case BasicEffect basicEffect:
@@ -115,6 +114,7 @@ namespace BetterSkinnedSample.AnimationModel
                             basicEffect.EnableDefaultLighting();
                             basicEffect.PreferPerPixelLighting = true;
                             break;
+
                         case SkinnedEffect skinnedEffect:
                             skinnedEffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
                             skinnedEffect.View = camera.View;
@@ -124,7 +124,6 @@ namespace BetterSkinnedSample.AnimationModel
                             skinnedEffect.SetBoneTransforms(skeleton);
                             break;
                     }
-                }
 
                 modelMesh.Draw();
             }

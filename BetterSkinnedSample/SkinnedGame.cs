@@ -32,10 +32,11 @@ namespace BetterSkinnedSample
             Camera.Center = new Vector3(-20, 86, 500);
 
             // File names of models and animations
-            ModelFileNames = new List<string> {"michelle/michelle", "ninja/ninja", "xbot/xbot", "ybot/ybot" };
+            ModelFileNames = new List<string> { "michelle/michelle", "ninja/ninja", "xbot/xbot", "ybot/ybot" };
             ModelAnimationFileNames = new List<string>
             {
-                "xbot/xbot - idle", "ybot/ybot - idle", "ybot/ybot - running", "ybot/ybot - silly dancing", "ybot/ybot - walking", "michelle/michelle - jumping"
+                "xbot/xbot - idle", "ybot/ybot - idle", "ybot/ybot - running", "ybot/ybot - silly dancing",
+                "ybot/ybot - walking", "michelle/michelle - jumping"
             };
         }
 

@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework;
 namespace BetterSkinnedSample.AnimationModel
 {
     /// <summary>
-    ///     Information about a bone we are animating. This class connects a bone in the clip to a bone in the model.
+    ///     Information about a bone we are animating.
+    ///     This class connects a bone in the clip to a bone in the model.
     /// </summary>
     public class BoneInfo
     {
@@ -95,7 +96,7 @@ namespace BetterSkinnedSample.AnimationModel
             else
             {
                 // Interpolate between keyframes.
-                var t = (float) ((position - Keyframe1.Time) / (Keyframe2.Time - Keyframe1.Time));
+                var t = (float)((position - Keyframe1.Time) / (Keyframe2.Time - Keyframe1.Time));
                 Rotation = Quaternion.Slerp(Keyframe1.Rotation, Keyframe2.Rotation, t);
                 Translation = Vector3.Lerp(Keyframe1.Translation, Keyframe2.Translation, t);
             }
@@ -119,10 +120,9 @@ namespace BetterSkinnedSample.AnimationModel
             if (ClipBone.Keyframes.Count > 0)
             {
                 Keyframe1 = ClipBone.Keyframes[CurrentKeyframe];
-                if (CurrentKeyframe == ClipBone.Keyframes.Count - 1)
-                    Keyframe2 = Keyframe1;
-                else
-                    Keyframe2 = ClipBone.Keyframes[CurrentKeyframe + 1];
+                Keyframe2 = CurrentKeyframe == ClipBone.Keyframes.Count - 1
+                    ? Keyframe1
+                    : ClipBone.Keyframes[CurrentKeyframe + 1];
             }
             else
             {
