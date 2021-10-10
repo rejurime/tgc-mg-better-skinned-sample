@@ -188,8 +188,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             if (node is MeshContent mesh)
                 // In the geometry we have to find a vertex channel that has a bone weight collection.
                 foreach (var geometry in mesh.Geometry)
-                foreach (var vchannel in geometry.Vertices.Channels)
-                    if (vchannel is VertexChannel<BoneWeightCollection>)
+                foreach (var vertexChannel in geometry.Vertices.Channels)
+                    if (vertexChannel is VertexChannel<BoneWeightCollection>)
                         return true;
 
             return false;

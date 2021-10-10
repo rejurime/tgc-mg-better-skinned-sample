@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using MonoGame.Framework.Content.Pipeline.Builder;
 
 namespace BetterSkinnedSample.AnimationPipelineExtension
 {
-    // TODO. This class needs a refactor.
+    /// <summary>
+    ///     TODO This class needs a refactor.
+    ///     This class allows you to build content in runtime without the need of adding the resources in the mgcb.
+    ///     Currently, it only builds fbx with animations.
+    /// </summary>
     public class CustomPipelineManager : PipelineManager
     {
         private const string BinFolder = "bin/";
@@ -31,10 +36,10 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             var projectDirectory = PathHelper.Normalize(Directory.GetCurrentDirectory());
             var projectContentDirectory =
                 PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectDirectory, "../../../" + ContentFolder)));
-            var outputPath = projectDirectory + "/" + ContentFolder;
+            var outputPath = PathHelper.Normalize(Path.Combine(projectDirectory, ContentFolder));
             var projectDirectoryParts = projectDirectory.Split(new[] { BinFolder }, StringSplitOptions.None);
             var intermediatePath = PathHelper.Normalize(Path.GetFullPath(Path.Combine(projectContentDirectory,
-                "../" + ObjFolder + projectDirectoryParts[projectDirectoryParts.Length - 1])));
+                "../" + ObjFolder + projectDirectoryParts.Last())));
 
             return new CustomPipelineManager(projectContentDirectory, outputPath, intermediatePath);
         }
