@@ -33,9 +33,10 @@ namespace BetterSkinnedSample
         private float znear = 10;
 
         /// <summary>
-        ///     Constructor. Initializes the graphics field from a passed parameter.
+        ///     Constructor.
+        ///     Initializes the graphics field from a passed parameter.
         /// </summary>
-        /// <param name="graphics">The graphics device manager for our program</param>
+        /// <param name="graphics">The graphics device manager for our program.</param>
         public Camera(GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
@@ -95,17 +96,8 @@ namespace BetterSkinnedSample
 
         public bool MousePanTilt { get; set; } = true;
 
-        public bool PadPitchYaw { get; set; } = true;
-
         public void Update(GraphicsDevice graphics, GameTime gameTime)
         {
-            var gamePadState = GamePad.GetState(PlayerIndex.One);
-            if (PadPitchYaw)
-            {
-                Yaw(-gamePadState.ThumbSticks.Right.X * 0.05f);
-                Pitch(gamePadState.ThumbSticks.Right.Y * 0.05f);
-            }
-
             var mouseState = Mouse.GetState();
             if (graphics.Viewport.Bounds.Contains(mouseState.X, mouseState.Y))
             {
@@ -147,8 +139,8 @@ namespace BetterSkinnedSample
 
         private void ComputeProjection()
         {
-            Projection = Matrix.CreatePerspectiveFieldOfView(fov,
-                graphics.GraphicsDevice.Viewport.AspectRatio, znear, zfar);
+            Projection =
+                Matrix.CreatePerspectiveFieldOfView(fov, graphics.GraphicsDevice.Viewport.AspectRatio, znear, zfar);
         }
 
         public void Pitch(float angle)
@@ -160,14 +152,14 @@ namespace BetterSkinnedSample
             if (len > 0)
                 cameraX.Normalize();
             else
-                cameraX = new Vector3(1, 0, 0);
+                cameraX = Vector3.UnitX;
 
             var t1 = Matrix.CreateTranslation(-center);
             var r = Matrix.CreateFromAxisAngle(cameraX, angle);
             var t2 = Matrix.CreateTranslation(center);
 
-            var M = t1 * r * t2;
-            eye = Vector3.Transform(eye, M);
+            var m = t1 * r * t2;
+            eye = Vector3.Transform(eye, m);
             ComputeView();
         }
 
@@ -181,14 +173,14 @@ namespace BetterSkinnedSample
             if (len > 0)
                 cameraY.Normalize();
             else
-                cameraY = new Vector3(0, 1, 0);
+                cameraY = Vector3.UnitY;
 
             var t1 = Matrix.CreateTranslation(-center);
             var r = Matrix.CreateFromAxisAngle(cameraY, angle);
             var t2 = Matrix.CreateTranslation(center);
 
-            var M = t1 * r * t2;
-            eye = Vector3.Transform(eye, M);
+            var m = t1 * r * t2;
+            eye = Vector3.Transform(eye, m);
             ComputeView();
         }
 
@@ -201,14 +193,14 @@ namespace BetterSkinnedSample
             if (len > 0)
                 cameraX.Normalize();
             else
-                cameraX = new Vector3(1, 0, 0);
+                cameraX = Vector3.UnitX;
 
             var t1 = Matrix.CreateTranslation(-eye);
             var r = Matrix.CreateFromAxisAngle(cameraX, angle);
             var t2 = Matrix.CreateTranslation(eye);
 
-            var M = t1 * r * t2;
-            center = Vector3.Transform(center, M);
+            var m = t1 * r * t2;
+            center = Vector3.Transform(center, m);
             ComputeView();
         }
 
@@ -222,14 +214,14 @@ namespace BetterSkinnedSample
             if (len > 0)
                 cameraY.Normalize();
             else
-                cameraY = new Vector3(0, 1, 0);
+                cameraY = Vector3.UnitY;
 
             var t1 = Matrix.CreateTranslation(-eye);
             var r = Matrix.CreateFromAxisAngle(cameraY, angle);
             var t2 = Matrix.CreateTranslation(eye);
 
-            var M = t1 * r * t2;
-            center = Vector3.Transform(center, M);
+            var m = t1 * r * t2;
+            center = Vector3.Transform(center, m);
             ComputeView();
         }
     }

@@ -108,7 +108,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         /// <summary>
         ///     Convert a tree of nodes into a list of nodes in topological order.
         /// </summary>
-        /// <param name="item">The root of the hierarchy</param>
+        /// <param name="item">The root of the hierarchy.</param>
         private List<NodeContent> FlattenHierarchy(NodeContent item)
         {
             var nodes = new List<NodeContent>();
@@ -164,7 +164,7 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
         ///     is redundant as far as any game is concerned. This function looks for children who's name ends with "Nub" and
         ///     removes them from the hierarchy.
         /// </summary>
-        /// <param name="skeleton">Root of the skeleton tree</param>
+        /// <param name="skeleton">Root of the skeleton tree.</param>
         private void TrimSkeleton(NodeContent skeleton)
         {
             var toDelete = new List<NodeContent>();
@@ -257,10 +257,10 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
             for (var i = 0; i < model.Bones.Count; i++)
                 bones[model.Bones[i].Name] = i;
 
-            // For saving the bone transforms
+            // For saving the bone transforms.
             boneTransforms = new Matrix[model.Bones.Count];
 
-            // Collect up all of the animation data
+            // Collect up all of the animation data.
             ProcessAnimationsRecursive(input);
 
             // Ensure there is always a clip, even if none is included in the FBX.
@@ -354,7 +354,8 @@ namespace BetterSkinnedSample.AnimationPipelineExtension
                     var keyframes = new LinkedList<Keyframe>();
                     foreach (var keyframe in channel.Value)
                     {
-                        var transform = keyframe.Transform; // Keyframe transformation.
+                        // Keyframe transformation.
+                        var transform = keyframe.Transform;
 
                         var newKeyframe = new Keyframe();
                         newKeyframe.Time = keyframe.Time.TotalSeconds;

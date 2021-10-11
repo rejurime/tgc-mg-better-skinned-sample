@@ -15,7 +15,7 @@ namespace BetterSkinnedSample.AnimationModel
         /// <summary>
         ///     Creates the Model from an XNA Model.
         /// </summary>
-        /// <param name="assetName">The name of the asset for this Model</param>
+        /// <param name="assetName">The name of the asset for this Model.</param>
         public AnimatedModel(string assetName)
         {
             AssetName = assetName;
@@ -54,8 +54,8 @@ namespace BetterSkinnedSample.AnimationModel
         /// <summary>
         ///     Play an animation clip.
         /// </summary>
-        /// <param name="clip">The clip to play</param>
-        /// <returns>The Player that will play this clip</returns>
+        /// <param name="clip">The clip to play.</param>
+        /// <returns>The Player that will play this clip.</returns>
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
             // Create a clip Player and assign it to this Model.
@@ -74,9 +74,9 @@ namespace BetterSkinnedSample.AnimationModel
         /// <summary>
         ///     Draw the Model.
         /// </summary>
-        /// <param name="graphics">The graphics device to draw on</param>
-        /// <param name="camera">A camera to determine the view</param>
-        /// <param name="world">A world matrix to place the Model</param>
+        /// <param name="graphics">The graphics device to draw on.</param>
+        /// <param name="camera">A camera to determine the view.</param>
+        /// <param name="world">A world matrix to place the Model.</param>
         public void Draw(GraphicsDevice graphics, Camera camera, Matrix world)
         {
             if (Model == null)
@@ -93,7 +93,7 @@ namespace BetterSkinnedSample.AnimationModel
                 boneTransforms[i] = bone.AbsoluteTransform;
             }
 
-            // Determine the skin transforms from the skeleton
+            // Determine the skin transforms from the skeleton.
             var skeleton = new Matrix[ModelExtra.Skeleton.Count];
             for (var s = 0; s < ModelExtra.Skeleton.Count; s++)
             {

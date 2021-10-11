@@ -16,6 +16,6 @@ namespace BetterSkinnedSample.AnimationDataTypes
         ///     The bone name for these keyframes.
         ///     Each bone has a name so we can associate it with a runtime model.
         /// </summary>
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = string.Empty;
     }
 }

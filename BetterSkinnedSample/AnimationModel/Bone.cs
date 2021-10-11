@@ -9,21 +9,21 @@ namespace BetterSkinnedSample.AnimationModel
     ///     and Rotation.
     ///     These are independent of the bind transformation originally supplied for the model.
     ///     So, the actual transformation for a bone is the product of the:
-    ///     Scaling
-    ///     Bind scaling (scaling removed from the bind transform)
-    ///     Rotation
-    ///     Translation
-    ///     Bind Transformation
-    ///     Parent Absolute Transformation
+    ///     * Scaling
+    ///     * Bind scaling (scaling removed from the bind transform)
+    ///     * Rotation
+    ///     * Translation
+    ///     * Bind Transformation
+    ///     * Parent Absolute Transformation
     /// </summary>
     public class Bone
     {
         /// <summary>
         ///     Constructor for a bone object.
         /// </summary>
-        /// <param name="name">The name of the bone</param>
-        /// <param name="bindTransform">The initial bind transform for the bone</param>
-        /// <param name="parent">A Parent for this bone</param>
+        /// <param name="name">The name of the bone.</param>
+        /// <param name="bindTransform">The initial bind transform for the bone.</param>
+        /// <param name="parent">A Parent for this bone.</param>
         public Bone(string name, Matrix bindTransform, Bone parent)
         {
             Name = name;

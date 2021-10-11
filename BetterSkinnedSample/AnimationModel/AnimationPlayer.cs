@@ -101,7 +101,7 @@ namespace BetterSkinnedSample.AnimationModel
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            Position = Position + (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Position += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (Looping && Position >= Duration)
                 Position = 0;
         }

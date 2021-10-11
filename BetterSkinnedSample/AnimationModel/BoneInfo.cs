@@ -137,7 +137,7 @@ namespace BetterSkinnedSample.AnimationModel
         /// </summary>
         public void SetModel(AnimatedModel model)
         {
-            // Find this bone
+            // Find this bone.
             AssignedBone = model.FindBone(ClipBone.Name);
         }
     }
